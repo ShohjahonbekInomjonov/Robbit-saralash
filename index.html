@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kichik muhandislar — WeDo 2.0</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #EEF3F8;
+    --surface: #FFFFFF;
+    --ink: #12203A;
+    --ink-soft: #4A5875;
+    --red: #E4413A;
+    --yellow: #FFC61A;
+    --blue: #2563EB;
+    --green: #178A62;
+    --line: #C9D4E3;
+    --radius-brick: 18px;
+    --radius-field: 10px;
+    --font-head: "Baloo 2", "Trebuchet MS", system-ui, sans-serif;
+    --font-body: "Nunito", "Segoe UI", system-ui, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0F1729;
+      --surface: #182238;
+      --ink: #EAF0FB;
+      --ink-soft: #A5B3CE;
+      --line: #2C3A57;
+      --green: #3DCB98;
+    }
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-body);
+    font-size: 18px;
+    line-height: 1.55;
+  }
+  h1, h2, h3 { font-family: var(--font-head); line-height: 1.1; margin: 0; }
+  a { color: var(--blue); }
+  :focus-visible { outline: 3px solid var(--blue); outline-offset: 3px; }
+  [hidden] { display: none !important; }
+
+  .wrap { max-width: 880px; margin: 0 auto; padding: 32px 20px 72px; }
+
+  /* ---------- Landing ---------- */
+  .hero h1 { font-size: clamp(2.4rem, 7vw, 4rem); font-weight: 800; letter-spacing: -0.01em; }
+  .hero p { max-width: 34ch; color: var(--ink-soft); margin: 14px 0 44px; font-size: 1.15rem; }
+
+  .bricks { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+  @media (max-width: 640px) { .bricks { grid-template-columns: 1fr; } }
+
+  .brick {
+    position: relative;
+    display: block;
+    width: 100%;
+    text-align: left;
+    border: 0;
+    cursor: pointer;
+    padding: 46px 26px 26px;
+    border-radius: var(--radius-brick);
+    font-family: inherit;
+    color: var(--ink);
+    box-shadow: 0 8px 0 rgba(0,0,0,.22);
+    transition: transform .12s ease, box-shadow .12s ease;
+  }
+  .brick::before {
+    content: "";
+    position: absolute;
+    left: 18px; right: 18px; top: -12px; height: 14px;
+    background: radial-gradient(circle at 50% 100%, var(--stud) 0 9px, transparent 10px) 0 0 / 46px 14px repeat-x;
+  }
+  .brick:hover { transform: translateY(-3px); box-shadow: 0 11px 0 rgba(0,0,0,.22); }
+  .brick:active { transform: translateY(6px); box-shadow: 0 2px 0 rgba(0,0,0,.22); }
+  .brick .age { font-family: var(--font-head); font-weight: 800; font-size: 3.2rem; line-height: 1; display: block; }
+  .brick .unit { font-weight: 700; font-size: 1.1rem; display: block; margin-top: 4px; }
+  .brick .sub { display: block; margin-top: 14px; font-size: .98rem; }
+  .brick-a { background: var(--yellow); --stud: var(--yellow); color: #12203A; }
+  .brick-b { background: var(--blue); --stud: var(--blue); color: #fff; }
+
+  /* ---------- Forms ---------- */
+  .back {
+    background: none; border: 0; padding: 6px 0; margin-bottom: 18px;
+    font: inherit; font-weight: 700; color: var(--blue); cursor: pointer;
+  }
+  .page-title { font-size: clamp(2rem, 6vw, 3rem); font-weight: 800; }
+  .page-lead { color: var(--ink-soft); margin: 10px 0 34px; max-width: 46ch; }
+
+  .step {
+    background: var(--surface);
+    border: 2px solid var(--line);
+    border-radius: 16px;
+    padding: 24px 22px 26px;
+    margin-bottom: 22px;
+  }
+  .step h2 { font-size: 1.5rem; font-weight: 700; display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+  .num {
+    flex: none; width: 36px; height: 36px; border-radius: 50%;
+    display: grid; place-items: center;
+    background: var(--red); color: #fff; font-size: 1.1rem;
+  }
+
+  label { display: block; font-weight: 700; margin-bottom: 6px; }
+  input[type="text"], textarea {
+    width: 100%;
+    font: inherit;
+    color: var(--ink);
+    background: var(--bg);
+    border: 2px solid var(--line);
+    border-radius: var(--radius-field);
+    padding: 12px 14px;
+  }
+  input[type="text"]:focus, textarea:focus { border-color: var(--blue); outline: none; box-shadow: 0 0 0 3px rgba(37,99,235,.25); }
+  textarea { min-height: 220px; resize: vertical; line-height: 1.5; }
+  .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 560px) { .row2 { grid-template-columns: 1fr; } }
+
+  .btn {
+    display: inline-block;
+    font-family: var(--font-head); font-weight: 700; font-size: 1.15rem;
+    padding: 12px 24px;
+    border-radius: 12px; border: 0; cursor: pointer;
+    text-decoration: none;
+    box-shadow: 0 5px 0 rgba(0,0,0,.25);
+    transition: transform .1s, box-shadow .1s;
+  }
+  .btn:active { transform: translateY(4px); box-shadow: 0 1px 0 rgba(0,0,0,.25); }
+  .btn-red { background: var(--red); color: #fff; }
+  .btn-blue { background: var(--blue); color: #fff; }
+  .btn[disabled] { opacity: .6; cursor: progress; }
+
+  .hint { color: var(--ink-soft); font-size: .95rem; margin: 0 0 14px; }
+  .counter { text-align: right; font-size: .95rem; color: var(--ink-soft); margin-top: 6px; font-variant-numeric: tabular-nums; }
+  .counter.full { color: var(--red); font-weight: 700; }
+
+  .problems { display: grid; gap: 12px; }
+  .problem {
+    display: grid; grid-template-columns: 34px 1fr 120px; gap: 12px; align-items: center;
+    padding: 10px 12px; border-radius: 12px; background: var(--bg);
+  }
+  .problem .n { font-family: var(--font-head); font-weight: 700; color: var(--ink-soft); }
+  .problem .q { font-family: var(--font-head); font-weight: 700; font-size: 1.5rem; white-space: nowrap; }
+  .problem input { text-align: center; font-weight: 700; font-size: 1.2rem; padding: 8px 10px; }
+  @media (max-width: 420px) { .problem { grid-template-columns: 26px 1fr 96px; } .problem .q { font-size: 1.25rem; } }
+
+  .msg { margin-top: 18px; padding: 14px 16px; border-radius: 12px; font-weight: 700; }
+  .msg.err { background: rgba(228,65,58,.13); color: var(--red); border: 2px solid var(--red); }
+  @media (prefers-color-scheme: dark) { .msg.err { color: #FF8A84; border-color: #FF8A84; } }
+
+  .done { text-align: center; padding: 56px 20px; }
+  .done h2 { font-size: 2.4rem; font-weight: 800; margin-bottom: 12px; }
+  .done p { color: var(--ink-soft); margin: 0 0 28px; }
+
+  .empty { padding: 60px 0; color: var(--ink-soft); }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; scroll-behavior: auto !important; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- ===== 1. Bosh sahifa: kategoriyalar ===== -->
+  <main id="view-home" class="hero">
+    <h1>Kichik muhandislar</h1>
+    <p>Yosh kategoriyangni tanla va boshlaymiz.</p>
+    <div class="bricks">
+      <button class="brick brick-a" type="button" data-go="cat1">
+        <span class="age">9–11</span>
+        <span class="unit">yosh</span>
+        <span class="sub">WeDo 2.0 robot, o'zing haqingda va misollar</span>
+      </button>
+      <button class="brick brick-b" type="button" data-go="cat2">
+        <span class="age">12–15</span>
+        <span class="unit">yosh</span>
+        <span class="sub">Tez orada</span>
+      </button>
+    </div>
+  </main>
+
+  <!-- ===== 2. 9–11 yosh ===== -->
+  <main id="view-cat1" hidden>
+    <button class="back" type="button" data-go="home">← Kategoriyalarga qaytish</button>
+    <h1 class="page-title">9–11 yosh</h1>
+    <p class="page-lead">Ma'lumotlaringni to'ldir, robot yo'riqnomasini och va misollarni yech.</p>
+
+    <form id="form" novalidate>
+      <section class="step">
+        <h2><span class="num">1</span> Kim ekanligingni yoz</h2>
+        <div class="row2">
+          <div>
+            <label for="ism">Ism</label>
+            <input id="ism" type="text" autocomplete="given-name" maxlength="60" required>
+          </div>
+          <div>
+            <label for="familiya">Familiya</label>
+            <input id="familiya" type="text" autocomplete="family-name" maxlength="60" required>
+          </div>
+        </div>
+      </section>
+
+      <section class="step">
+        <h2><span class="num">2</span> WeDo 2.0 yo'riqnomasi</h2>
+        <p class="hint">Wobble robotini yig'ish bo'yicha rasmli yo'riqnoma yangi oynada ochiladi.</p>
+        <a class="btn btn-blue" href="https://assets.education.lego.com/v3/assets/blt293eea581807678a/bltb2c8e29e01fde567/5f88031bf4c5ce0e93db15a7/45300_01_wobble.pdf?locale=en-us" target="_blank" rel="noopener noreferrer">Yo'riqnomani ochish</a>
+      </section>
+
+      <section class="step">
+        <h2><span class="num">3</span> O'zing haqingda yoz</h2>
+        <p class="hint">Nimalarni yaxshi ko'rasan? Nimalar qilasan? Orzuing nima? Ko'pi bilan 1000 ta so'z.</p>
+        <label for="haqida" class="sr" style="position:absolute;left:-9999px">O'zing haqingda</label>
+        <textarea id="haqida" aria-describedby="counter"></textarea>
+        <div id="counter" class="counter" aria-live="polite">0 / 1000 so'z</div>
+      </section>
+
+      <section class="step">
+        <h2><span class="num">4</span> Misollarni yech</h2>
+        <p class="hint">Javobni o'zing yoz. Bilmasang, bo'sh qoldirsang ham bo'ladi.</p>
+        <div id="problems" class="problems"></div>
+      </section>
+
+      <button id="submit" class="btn btn-red" type="submit">Saqlash</button>
+      <div id="error" class="msg err" role="alert" hidden></div>
+    </form>
+
+    <div id="done" class="done step" hidden>
+      <h2>Rahmat!</h2>
+      <p>Ma'lumotlaring saqlash uchun yuborildi.</p>
+      <button id="again" class="btn btn-blue" type="button">Yana bir kishi to'ldirsin</button>
+    </div>
+  </main>
+
+  <!-- ===== 3. 12–15 yosh (hozircha bo'sh) ===== -->
+  <main id="view-cat2" hidden>
+    <button class="back" type="button" data-go="home">← Kategoriyalarga qaytish</button>
+    <h1 class="page-title">12–15 yosh</h1>
+    <div class="empty">Bu bo'lim hozircha bo'sh.</div>
+  </main>
+
+</div>
+
+<script>
+/* ============================================================
+   SOZLAMA: Google Apps Script "Web app" manzilini shu yerga qo'ying
+   (Code.gs faylini deploy qilgandan keyin olinadi).
+   ============================================================ */
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzZDHeD1NrvgNhX5YWcPWxWqbUSTPYU5_ihvTXiQaHFRwQunILugX0TA6QvAcWBq7mvhg/exec";
+
+const MAX_WORDS = 1000;
+const PROBLEM_COUNT = 10;
+
+/* ---------- Ko'rinishlarni almashtirish ---------- */
+const views = {
+  home: document.getElementById("view-home"),
+  cat1: document.getElementById("view-cat1"),
+  cat2: document.getElementById("view-cat2"),
+};
+function show(name) {
+  Object.entries(views).forEach(([k, el]) => (el.hidden = k !== name));
+  window.scrollTo(0, 0);
+}
+document.querySelectorAll("[data-go]").forEach((b) =>
+  b.addEventListener("click", () => show(b.dataset.go))
+);
+
+/* ---------- Misollar ---------- */
+const rnd = (a, b) => Math.floor(Math.random() * (b - a + 1)) + a;
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = rnd(0, i);
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+function makeProblems() {
+  const list = [];
+  for (let i = 0; i < 3; i++) { // qo'shish
+    const a = rnd(5, 60), b = rnd(5, 99 - a > 5 ? 99 - a : 5);
+    list.push({ q: `${a} + ${b}`, a: a + b });
+  }
+  for (let i = 0; i < 3; i++) { // ayirish
+    const a = rnd(20, 99), b = rnd(3, a - 1);
+    list.push({ q: `${a} − ${b}`, a: a - b });
+  }
+  for (let i = 0; i < 2; i++) { // ko'paytirish
+    const a = rnd(2, 9), b = rnd(2, 10);
+    list.push({ q: `${a} × ${b}`, a: a * b });
+  }
+  for (let i = 0; i < 2; i++) { // bo'lish
+    const b = rnd(2, 9), r = rnd(2, 10);
+    list.push({ q: `${b * r} ÷ ${b}`, a: r });
+  }
+  return shuffle(list).slice(0, PROBLEM_COUNT);
+}
+
+let problems = [];
+const problemsEl = document.getElementById("problems");
+function renderProblems() {
+  problems = makeProblems();
+  problemsEl.textContent = "";
+  problems.forEach((p, i) => {
+    const row = document.createElement("div");
+    row.className = "problem";
+    const n = document.createElement("span");
+    n.className = "n"; n.textContent = i + 1 + ".";
+    const q = document.createElement("span");
+    q.className = "q"; q.textContent = p.q + " =";
+    const input = document.createElement("input");
+    input.type = "text"; input.inputMode = "numeric"; input.maxLength = 6;
+    input.autocomplete = "off";
+    input.setAttribute("aria-label", `${i + 1}-misol javobi: ${p.q}`);
+    input.addEventListener("input", () => {
+      input.value = input.value.replace(/[^0-9]/g, "");
+    });
+    p.input = input;
+    row.append(n, q, input);
+    problemsEl.appendChild(row);
+  });
+}
+
+/* ---------- So'z hisoblagich (1000 gacha) ---------- */
+const haqida = document.getElementById("haqida");
+const counter = document.getElementById("counter");
+function countWords(s) {
+  const m = s.match(/\S+/g);
+  return m ? m.length : 0;
+}
+function clampWords(s) {
+  const re = /\S+/g;
+  let m, n = 0;
+  while ((m = re.exec(s)) !== null) {
+    n++;
+    if (n === MAX_WORDS) return s.slice(0, m.index + m[0].length);
+  }
+  return s;
+}
+haqida.addEventListener("input", () => {
+  if (countWords(haqida.value) > MAX_WORDS) haqida.value = clampWords(haqida.value);
+  const c = countWords(haqida.value);
+  counter.textContent = `${c} / ${MAX_WORDS} so'z`;
+  counter.classList.toggle("full", c >= MAX_WORDS);
+});
+
+/* ---------- Yuborish ---------- */
+const form = document.getElementById("form");
+const doneEl = document.getElementById("done");
+const errorEl = document.getElementById("error");
+const submitBtn = document.getElementById("submit");
+
+function showError(text) {
+  errorEl.textContent = text;
+  errorEl.hidden = false;
+}
+
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  errorEl.hidden = true;
+
+  const ism = document.getElementById("ism").value.trim();
+  const familiya = document.getElementById("familiya").value.trim();
+  if (!ism || !familiya) {
+    showError("Iltimos, ism va familiyangni yoz.");
+    (ism ? document.getElementById("familiya") : document.getElementById("ism")).focus();
+    return;
+  }
+  if (!SCRIPT_URL) {
+    showError("Sayt hali Google Sheets bilan ulanmagan: index.html ichidagi SCRIPT_URL bo'sh.");
+    return;
+  }
+
+  let correct = 0;
+  const lines = problems.map((p, i) => {
+    const raw = p.input.value.trim();
+    const ok = raw !== "" && Number(raw) === p.a;
+    if (ok) correct++;
+    return `${i + 1}) ${p.q} = ${raw === "" ? "—" : raw}  [${ok ? "to'g'ri" : "noto'g'ri, javob: " + p.a}]`;
+  });
+
+  const payload = {
+    ism,
+    familiya,
+    kategoriya: "9-11 yosh",
+    haqida: haqida.value.trim(),
+    misollar: lines.join("\n"),
+    togri: correct,
+    jami: problems.length,
+  };
+
+  submitBtn.disabled = true;
+  submitBtn.textContent = "Yuborilmoqda...";
+  try {
+    // text/plain — Apps Script uchun CORS preflight talab qilinmasligi uchun
+    await fetch(SCRIPT_URL, {
+      method: "POST",
+      mode: "no-cors",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify(payload),
+    });
+    form.hidden = true;
+    doneEl.hidden = false;
+    window.scrollTo(0, 0);
+  } catch (err) {
+    showError("Yuborib bo'lmadi. Internetni tekshirib, qayta urinib ko'r.");
+  } finally {
+    submitBtn.disabled = false;
+    submitBtn.textContent = "Saqlash";
+  }
+});
+
+document.getElementById("again").addEventListener("click", () => {
+  form.reset();
+  haqida.dispatchEvent(new Event("input"));
+  renderProblems();
+  doneEl.hidden = true;
+  form.hidden = false;
+  window.scrollTo(0, 0);
+});
+
+renderProblems();
+</script>
+</body>
+</html>
